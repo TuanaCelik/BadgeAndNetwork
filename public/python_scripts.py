@@ -1,5 +1,6 @@
 import csv
 from collections import Counter
+import json
 
 def put_csv_into_list(file_name):
   data = []
@@ -49,7 +50,13 @@ def sort_and_cut_list(num, sorted_list):
 sorted_list = sort_and_cut_list(10, sorted_list)
 
 
+def write_csv(input_list):
+  with open('topCommSize.csv', 'wb') as csvfile:
+    w = csv.writer(csvfile)
+    for item in input_list:
+      w.writerow(item)
 
+write_csv(sorted_list)
 
 #how many distinct destination IP addresses there are in IPLog.csv
 #20243 distinct destinations
