@@ -7,13 +7,13 @@
 </style>
   <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
 <body>
-<script src="public/d3/d3.v3.min.js">
-
+<script src="d3/d3.v3.min.js"></script>
+<script>
+console.log("I'm here");
 var svg = d3.select("body").append("svg");
-
-d3.json("public/data.json", function(error, graph) {
+d3.csv("IPLog.csv", function(data) {
     //PUT YOUR DISPLAYING CODE BELOW
-    
+    console.log(data[0]);
     //
 
 });
