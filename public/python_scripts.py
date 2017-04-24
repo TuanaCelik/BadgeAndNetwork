@@ -53,6 +53,7 @@ sorted_list = sort_and_cut_list(10, sorted_list)
 def write_csv(input_list):
   with open('topCommSize.csv', 'wb') as csvfile:
     w = csv.writer(csvfile)
+    w.writerow(['destIP','Size','Freq'])
     for item in input_list:
       w.writerow(item)
 
