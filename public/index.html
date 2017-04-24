@@ -2,21 +2,132 @@
 <meta charset="utf-8">
 <title>Data Visualization Final Project</title>
 <style>
+@import url(http://fonts.googleapis.com/css?family=Wire+One);
+body {
+  margin: auto;
+  position: relative;
+  padding: 20px;
+  height: 100%;
+}
+ 
+form {
+  position: absolute;
+  right: 1000px;
+  top: 1000px;
+}
+ 
+.node {
+    border: solid 2px white;
+    line-height: 0.95;
+    overflow: hidden;
+    position: absolute;
+    border-radius: 10px;
+}
 
+.node div {
+   padding: 6px 4%;
+}
 
 </style>
   <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
 <body>
 <script src="d3/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script>
-console.log("I'm here");
-var svg = d3.select("body").append("svg");
-d3.csv("IPLog.csv", function(data) {
+
+
+d3.csv("topCommSize.csv", function(error, data) {
+	var tree = {
+	    name: "tree",
+	    children: [
+	        { name: data[0].destIP, size: data[0].Size/10, freq: data[0].Freq/10 },
+	        { name: data[1].destIP, size: data[1].Size/10, freq: data[1].Freq/10 },
+	        { name: data[2].destIP, size: data[2].Size/10, freq: data[2].Freq/10 },
+	        { name: data[3].destIP, size: data[3].Size/10, freq: data[3].Freq/10 },
+	        { name: data[4].destIP, size: data[4].Size/10, freq: data[4].Freq/10 },
+	        { name: data[5].destIP, size: data[5].Size/10, freq: data[5].Freq/10 },
+	        { name: data[6].destIP, size: data[6].Size/10, freq: data[6].Freq/10 },
+	        { name: data[7].destIP, size: data[7].Size/10, freq: data[7].Freq/10 },
+	        { name: data[8].destIP, size: data[8].Size/10, freq: data[8].Freq/10 },
+	        { name: data[9].destIP, size: data[9].Size/10, freq: data[9].Freq/10 }
+	    ]
+	};
+
+	var width = innerWidth-40,
+	    height = innerHeight-40,
+	    color = d3.interpolateOranges,
+	    div = d3.select("body").append("div")
+	       .style("position", "relative");
+
+	var treemap = d3.layout.treemap()
+	    .size([width, height])
+	    .sticky(true)
+	    .value(function(d) { return d.size; });
+	 
+	var node = div.datum(tree).selectAll(".node")
+	      .data(treemap.nodes)
+	    .enter().append("div")
+	      .attr("class", "node")
+	      .call(position)
+	      .style("background-color", function(d) {
+	      	  //console.log(1-((1/d.freq)*50));
+	          return d.name == 'tree' ? '#fff' : color(1-((1/d.freq)*50)); })
+	      .append('div')
+	      .style("font-size", function(d) {
+	          // compute font size based on sqrt(area)
+	          return Math.max(20, 0.18*Math.sqrt(d.area))+'px'; })
+	      .text(function(d) { return d.children ? null : d.name; });
+	 
+	function position() {
+	  this.style("left", function(d) { return d.x + "px"; })
+	      .style("top", function(d) { return d.y + "px"; })
+	      .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
+	      .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
+	}  
+});  
+/*var width = 960, height = 500, color = d3.scale.category20c();
+
+var treemap = d3.layout.treemap()
+    .size([width, height])
+    .sticky(true)
+    .value(function(d) { return d.size; });*/
+
+/*var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+*/
+/*var div = d3.select("#chart").append("div")
+	     .style("position", "relative")
+	     .style("width", width + "px")
+	     .style("height", height + "px");
+
+d3.csv("topCommSize.csv", function(error, data) {
     //PUT YOUR DISPLAYING CODE BELOW
+    if (error) throw error;
     console.log(data[0]);
-    //
+
+	div.data([data]).selectAll("div")
+       .data(treemap.nodes)
+       .enter().append("div")
+       .attr("class", "cell")
+       .style("background", function(d) { return d.destIP ? color(d.destIP) : null; })
+       .call(cell)
+       .text(function(d) { return d.destIP ? null : d.destIP; });
+       console.log(treemap.nodes);
+       div.selectAll("div")
+        .data(treemap.value(function(d) { return d.Size; }))
+      	.call(cell);
 
 });
-
+function cell() {
+   this
+       .style("left", function(d) { return d.x + "px"; })
+       .style("top", function(d) { return d.y + "px"; })
+       .style("width", function(d) { return d.dx - 1 + "px"; })
+       .style("height", function(d) { return d.dy - 1 + "px"; });
+ }
+console.log("I'm here");*/
 </script>
 </body>
