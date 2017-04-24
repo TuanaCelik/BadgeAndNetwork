@@ -6,6 +6,7 @@
 body {
   margin: auto;
   position: relative;
+  /*left: 400px;*/
   padding: 20px;
   height: 100%;
 }
@@ -57,7 +58,7 @@ d3.csv("topCommSize.csv", function(error, data) {
 
 	var width = innerWidth-40,
 	    height = innerHeight-40,
-	    color = d3.interpolateOranges,
+	    color = d3.interpolateReds,
 	    div = d3.select("body").append("div")
 	       .style("position", "relative");
 
