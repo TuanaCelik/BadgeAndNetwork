@@ -77,7 +77,7 @@ d3.csv("topCommSize.csv", function(error, data) {
 	      .append('div')
 	      .style("font-size", function(d) {
 	          // compute font size based on sqrt(area)
-	          return Math.max(20, 0.18*Math.sqrt(d.area))+'px'; })
+	          return Math.max(20, 0.1*Math.sqrt(d.area))+'px'; })
 	      .text(function(d) { return d.children ? null : d.name; });
 	 
 	function position() {
