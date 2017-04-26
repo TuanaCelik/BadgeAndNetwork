@@ -20,10 +20,11 @@ var Chart = {};
 
 Chart.rose = function() {
 
-	var margin = {'top': 20, 'right': 20, 'bottom': 20, 'left': 20},
-		height = 50,
-		width = 50,
-		color = 'rgb(0,0,0)',
+	var margin = {'top': 20, 'right': 20, 'bottom': 400, 'left': 500},
+		height = 100,
+		width = 100,
+		color = d3.interpolateReds,
+		/*colors = function(d){ return color(1-((1/d.piggyNum)*50));},*/
 		area = function(d) { return [d.y]; },
 		angle = function(d) { return d.x; },
 		radiusScale = d3.scale.linear(),
@@ -71,6 +72,7 @@ Chart.rose = function() {
 			return {
 				'angle': angle.call(data, d, i),
 				'area': area.call(data, d, i),
+				/*'colors': colors.call(data, d, i),*/
 				'label': label.call(data, d, i)			
 			};
 		});
@@ -123,8 +125,8 @@ Chart.rose = function() {
 
 
 	function createWedges( data ) {
-
 		// Create the wedge groups:
+
 		wedgeGroups = graph.selectAll('.wedgeGroup')
 			.data( data )
 		  .enter().append('svg:g')
@@ -135,7 +137,6 @@ Chart.rose = function() {
 		wedges = wedgeGroups.selectAll('.wedge')
 		  	.data( function(d) { 
 		  		var ids = d3.range(0, legend.length);
-
 		  		ids.sort( function(a,b) { 
 			  		var val2 = d.radius[b],
 			  			val1 = d.radius[a]
