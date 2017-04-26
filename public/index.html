@@ -29,6 +29,23 @@ form {
    padding: 6px 4%;
 }
 
+
+.toolTip {
+  position: absolute;
+  display: none;
+  width: auto;
+  height: auto;
+  background: none repeat scroll 0 0 white;
+  border: 0 none;
+  border-radius: 8px 8px 8px 8px;
+  box-shadow: -3px 3px 15px #888888;
+  color: black;
+  font: 12px serif;
+  padding: 5px;
+  text-align: center;
+    }
+
+
 </style>
   <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
 <body>
@@ -45,7 +62,17 @@ d3.csv("topCommSize.csv", function(error, data) {
     name = d.destIP;
     size = d.Size/10;
     freq = d.Freq/10;
-    return {"name":name, "size":size, "freq":freq};
+    s1 = d.s1;
+    s2 = d.s2;
+    s3 = d.s3;
+    s4 = d.s4;
+    s5 = d.s5;
+    s6 = d.s6;
+    s7 = d.s7;
+    s8 = d.s8;
+    s9 = d.s9;
+    s10 = d.s10;
+    return {"name":name, "size":size, "freq":freq, "s1":s1, "s2":s2, "s3":s3, "s4":s4, "s5":s5, "s6":s6, "s7":s7, "s8":s8, "s9":s9, "s10":s10};
   })
 
 	var tree = {
@@ -65,6 +92,22 @@ d3.csv("topCommSize.csv", function(error, data) {
 	    .value(function(d) { return d.size; });
 
 
+  var tool = d3.select("body").append("div").attr("class", "toolTip");
+
+  var mousemove = function(d) {
+    var xPosition = d3.event.pageX + 5;
+    var yPosition = d3.event.pageY + 5;
+    
+    tool.style("left", xPosition + "px")
+    tool.style("top", yPosition + "px")
+    tool.html(d["s1"] + "<br>"  + d["s2"] + "<br>" + d["s3"] + "<br>"  + d["s4"] + "<br>"  + d["s5"] + "<br>"  + d["s6"] + "<br>"  + d["s7"] + "<br>" + d["s8"] + "<br>"  + d["s9"] + "<br>"  + d["s10"]);
+    tool.style("display", "inline-block");
+  };
+
+  var mouseout = function() {
+    down = false
+    tool.style("display", "none");
+  };
 	 
 	var node = div.datum(tree).selectAll(".node")
 	      .data(treemap.nodes)
@@ -74,6 +117,8 @@ d3.csv("topCommSize.csv", function(error, data) {
 	      .style("background-color", function(d) {
 	      	  //console.log(1-((1/d.freq)*50));
 	          return d.name == 'tree' ? '#fff' : color(1-((1/d.freq)*50)); })
+        .on("mouseout", mouseout)
+        .on("mousemove", mousemove)
 	      .append('div')
 	      .style("font-size", function(d) {
 	          // compute font size based on sqrt(area)
