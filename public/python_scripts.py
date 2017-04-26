@@ -2,6 +2,7 @@ import csv
 from collections import Counter
 import json
 
+#VISUALIZATION 1
 def put_csv_into_list(file_name):
   data = []
   with open(file_name, 'rb') as csvfile:
@@ -57,28 +58,15 @@ def write_csv(input_list):
     for item in input_list:
       w.writerow(item)
 
-write_csv(sorted_list)
+#write_csv(sorted_list)
+
+#VISUALIZATION 2
+
+#Find most frequent contactors to suspicious IP
+
+
 
 #how many distinct destination IP addresses there are in IPLog.csv
 #20243 distinct destinations
 #115414 total destinations
-def distinct_destinations():
-  dest_set = set([])
-  count = 0
-
-  with open('IPLog.csv', 'rb') as csvfile:
-    spamreader = csv.reader(csvfile)
-    first_row = next(spamreader)
-    for row in spamreader:
-        count +=1
-        if row[1] not in dest_set:
-          dest_set.add(row[1])
-
-  #return len(dest_set)
-  return count
-#print distinct_destinations()
-#new data structure: destination, size, count
-#dictionary: destination: size, count
-
-#top_ten_comm_sizes()
 
