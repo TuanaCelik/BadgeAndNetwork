@@ -6,7 +6,7 @@
 body {
   margin: auto;
   position: relative;
-  /*left: 400px;*/
+ /* left: 600px;*/
   padding: 20px;
   height: 100%;
 }
@@ -36,6 +36,7 @@ form {
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script type="text/javascript" src="script.js"></script>
 <script>
 
 
@@ -56,8 +57,8 @@ d3.csv("topCommSize.csv", function(error, data) {
 	    ]
 	};
 
-	var width = innerWidth-40,
-	    height = innerHeight-40,
+	var width = 600,
+	    height = 600,
 	    color = d3.interpolateReds,
 	    div = d3.select("body").append("div")
 	       .style("position", "relative");
@@ -87,6 +88,60 @@ d3.csv("topCommSize.csv", function(error, data) {
 	      .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
 	      .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
 	}  
+}),
+
+d3.csv("piggy.csv", function(error, data){
+	var rose = Chart.rose(),
+			height = 2000,
+			causes = ['disease', 'wounds', 'other'],
+			labels = [];
+	for(var i = 0; i < 60; i++){
+		labels.push(i);
+	}
+
+	var scalar;
+	data.forEach( function(d) { 
+		//d.date = format.parse(d.date);
+		d.label = labels[d.id];
+		
+		// Calculate the average annual mortality, as done by Nightingale:
+		// http://understandinguncertainty.org/node/214 
+		scalar = 100*60 / labels.size;
+		d.piggy = d.piggy * scalar;
+	} );
+
+	// Get the maximum value:
+	var maxVal = d3.max( data, function(d) {
+		return d3.max( [6, d.piggy*6] );
+	});
+
+	// Where the maximum value gives us the maximum radius:
+	var maxRadius = Math.sqrt(maxVal*60 / Math.PI);
+	
+	// Append a new figure to the DOM:
+	figure = d3.select( 'body' )
+		.attr("x", 200)
+		.attr("y", 0)
+		.append( 'figure' );
+
+	// Get the figure width:
+	width = parseInt( figure.style( 'width' ), 10 );
+
+	// Update the chart generator settings:
+	rose.legend(causes)
+		.width( width )
+		.height( height )
+		.delay( 0 )
+		.duration( 500 )
+		.domain( [0, maxRadius] )
+		.angle( function(d) { return d.id; } )
+		.area( function(d, i) { return [d.piggy]; } );							
+
+	// Bind the data and generate a new chart:
+	figure.datum( data )
+		.attr('class', 'chart figure1')
+		.call( rose );
+
 }); 
 </script>
 </body>
