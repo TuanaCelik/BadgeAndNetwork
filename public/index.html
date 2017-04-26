@@ -40,20 +40,17 @@ form {
 
 
 d3.csv("topCommSize.csv", function(error, data) {
+  var mapped_children = data.map(function(d)
+  {
+    name = d.destIP;
+    size = d.Size/10;
+    freq = d.Freq/10;
+    return {"name":name, "size":size, "freq":freq};
+  })
+
 	var tree = {
 	    name: "tree",
-	    children: [
-	        { name: data[0].destIP, size: data[0].Size/10, freq: data[0].Freq/10 },
-	        { name: data[1].destIP, size: data[1].Size/10, freq: data[1].Freq/10 },
-	        { name: data[2].destIP, size: data[2].Size/10, freq: data[2].Freq/10 },
-	        { name: data[3].destIP, size: data[3].Size/10, freq: data[3].Freq/10 },
-	        { name: data[4].destIP, size: data[4].Size/10, freq: data[4].Freq/10 },
-	        { name: data[5].destIP, size: data[5].Size/10, freq: data[5].Freq/10 },
-	        { name: data[6].destIP, size: data[6].Size/10, freq: data[6].Freq/10 },
-	        { name: data[7].destIP, size: data[7].Size/10, freq: data[7].Freq/10 },
-	        { name: data[8].destIP, size: data[8].Size/10, freq: data[8].Freq/10 },
-	        { name: data[9].destIP, size: data[9].Size/10, freq: data[9].Freq/10 }
-	    ]
+	    children: children
 	};
 
 	var width = innerWidth-40,
@@ -66,6 +63,8 @@ d3.csv("topCommSize.csv", function(error, data) {
 	    .size([width, height])
 	    .sticky(true)
 	    .value(function(d) { return d.size; });
+
+
 	 
 	var node = div.datum(tree).selectAll(".node")
 	      .data(treemap.nodes)
