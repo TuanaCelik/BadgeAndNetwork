@@ -23,15 +23,15 @@ Chart.rose = function() {
 	var margin = {'top': 20, 'right': 20, 'bottom': 400, 'left': 500},
 		height = 100,
 		width = 100,
-		color = d3.interpolateReds,
-		/*colors = function(d){ return color(1-((1/d.piggyNum)*50));},*/
+		//color = d3.interpolateReds,
+		colors = function(d){ return d.colors;},
 		area = function(d) { return [d.y]; },
 		angle = function(d) { return d.x; },
 		radiusScale = d3.scale.linear(),
 		angleScale = d3.scale.linear().range( [Math.PI, 3*Math.PI ] ),
 		domain = [0, 1],
 		legend = [''],
-		label = function(d) { return d.label; },
+		label = function(d) { /*console.log('got here');*/ return d.label; },
 		delay = 1000,
 		duration = 100,
 		canvas, graph, centerX, centerY, numWedges, wedgeGroups, wedges, legendGroup;
@@ -43,7 +43,6 @@ Chart.rose = function() {
 		.startAngle( function(d,i) { return angleScale( d.angle ); } );
 
 	function chart( selection ) {
-
 		selection.each( function( data ) {
 
 			// Determine the number of wedges:
@@ -72,7 +71,7 @@ Chart.rose = function() {
 			return {
 				'angle': angle.call(data, d, i),
 				'area': area.call(data, d, i),
-				/*'colors': colors.call(data, d, i),*/
+				'colors': colors.call(data, d, i),
 				'label': label.call(data, d, i)			
 			};
 		});
@@ -83,6 +82,7 @@ Chart.rose = function() {
 			return {
 				'angle': d.angle,
 				'label': d.label,
+				'colors': d.colors,
 				'radius': d.area.map( function(area) {
 					return Math.sqrt( numWedges / Math.PI );
 				})
@@ -131,7 +131,8 @@ Chart.rose = function() {
 			.data( data )
 		  .enter().append('svg:g')
 		  	.attr('class', 'wedgeGroup')
-		  	.attr('transform', 'scale(0,0)');
+		  	.attr('fill', colors);
+
 
 		// Create the wedges:
 		wedges = wedgeGroups.selectAll('.wedge')
@@ -193,12 +194,14 @@ Chart.rose = function() {
 				return [
 					{
 						'index': i,
+						'colors': d.colors,
 						'label': d.label
 					}
 				];
 			} )
 		  .enter().append('svg:text')
 	   		.attr('class', 'label')
+	   		.attr('fill', 'colors')
 	   		.attr('text-anchor', 'start')
 	   		.attr('x', 5)
 	   		.attr('dy', '-.71em')
@@ -236,6 +239,13 @@ Chart.rose = function() {
 	chart.area = function( _ ) {
 		if (!arguments.length) return area;
 		area = _;
+		return chart;
+	};
+
+	chart.colors = function( _ ) {
+		if (!arguments.length) return colors;
+		colors = _;
+		//console.log(colors);
 		return chart;
 	};
 

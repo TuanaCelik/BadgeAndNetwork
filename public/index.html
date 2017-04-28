@@ -160,6 +160,7 @@ d3.csv("piggy.csv", function(error, data){
 	var scalar;
 	data.forEach( function(d) { 
 		d.label = labels[d.id];
+		d.colors = color(0.5+((d.piggyNum)*0.2));
 		scalar = 100*60 / labels.size;
 		d.piggyNum = d.piggyNum * scalar;
 	} );
@@ -184,9 +185,10 @@ d3.csv("piggy.csv", function(error, data){
 		.width( width )
 		.height( height )
 		.delay( 0 )
-		.duration( 500 )
+		.duration( 200 )
 		.domain( [0, maxRadius] )
 		.angle( function(d) { return d.id; } )
+		//.colors( function(d) { /*console.log(d.colors);*/ return d.colors; } )
 		.area( function(d, i) { return [d.id]; } );
 	// Bind the data and generate a new chart:
 	figure.datum( data )
