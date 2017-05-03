@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Data Visualization Final Project</title>
+<body>
+<style>
+
+form {
+  position: absolute;
+  left: 20px;
+  top: 10px;
+}
+
+.node {
+  border: solid 2px white;
+  position: absolute;
+}
+
+#tooltip {
+  position: absolute;
+  width: 220px;
+  height: auto;
+  padding: 10px;
+  background-color: white;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+#tooltip.hidden {
+  display: none;
+}
+
+#tooltip p {
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+</style>
+<script src="d3/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script type="text/javascript" src="script.js"></script>
+<script>
+
+
+var margin = { top: 40, right: 10, bottom: 10, left: 10 },
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var treemap = d3.layout.treemap()
+    .size([width, height])
+    .sticky(true)
+    .value(function(d) { return d.size; });
+
+var color = d3.interpolateReds;
+
+var div = d3.select("body").append("div")
+    .style("position", "relative")
+    .style("width", (width + margin.left + margin.right) + "px")
+    .style("height", (height + margin.top + margin.bottom) + "px")
+    .style("left", margin.left + "px")
+    .style("top", margin.top + "px");
+
+var mousemove = function(d) {
+  var xPosition = d3.event.pageX + 5;
+  var yPosition = d3.event.pageY + 5;
+
+  d3.select("#tooltip")
+    .style("left", xPosition + "px")
+    .style("top", yPosition + "px");
+  d3.select("#tooltip #IP")
+    .text("IP: " + d["name"]);
+  d3.select("#tooltip #size")
+    .text("Incoming data: " + d["size"]);
+  d3.select("#tooltip #freq")
+    .text("Frequency: " + d["freq"]);
+  d3.select("#tooltip").classed("hidden", false);
+};
+
+var mouseout = function() {
+  d3.select("#tooltip").classed("hidden", true);
+};
+
+
+d3.csv("topCommSize.csv", function(error, data) {
+  var mapped_children = data.map(function(d)
+  {
+    name = d.destIP;
+    size = d.Size/10;
+    freq = d.Freq/10;
+    s1 = d.s1;
+    s2 = d.s2;
+    s3 = d.s3;
+    s4 = d.s4;
+    s5 = d.s5;
+    s6 = d.s6;
+    s7 = d.s7;
+    s8 = d.s8;
+    s9 = d.s9;
+    s10 = d.s10;
+    return {"name":name, "size":size, "freq":freq, "s1":s1, "s2":s2, "s3":s3, "s4":s4, "s5":s5, "s6":s6, "s7":s7, "s8":s8, "s9":s9, "s10":s10};
+  })
+
+  var tree = {
+      name: "tree",
+      children: mapped_children
+  };
+
+  var node = div.datum(tree).selectAll(".node")
+      .data(treemap.nodes)
+    .enter().append("div")
+      .attr("class", "node")
+      .call(position)
+      .style("background-color", function(d) {
+            return d.name == 'tree' ? '#fff' : color(1-((1/d.freq)*50)); })
+      .on("mousemove", mousemove)
+      .on("mouseout", mouseout)
+      .append('div')
+      .style("font-size", function(d) {
+          // compute font size based on sqrt(area)
+          return Math.max(20, 0.1*Math.sqrt(d.area))+'px'; })
+      .text(function(d) { return d.children ? null : d.name; });;
+  
+  function position() {
+  this.style("left", function(d) { return d.x + "px"; })
+      .style("top", function(d) { return d.y + "px"; })
+      .style("width", function(d) { return Math.max(0, d.dx - 2) + "px"; })
+      .style("height", function(d) { return Math.max(0, d.dy - 2) + "px"; });
+  }
+
+});
+
+function position() {
+  this.style("left", function(d) { return d.x + "px"; })
+      .style("top", function(d) { return d.y + "px"; })
+      .style("width", function(d) { return Math.max(0, d.dx - 2) + "px"; })
+      .style("height", function(d) { return Math.max(0, d.dy - 2) + "px"; });
+}
+</script>
+
+<div id="tooltip" class="hidden">
+  <p><span id="IP"></span></p>
+  <p><span id="size"></span></p>
+  <p><span id="freq"></span></p>
+</div>
+
+</body>
