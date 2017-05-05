@@ -84,7 +84,7 @@ Chart.rose = function() {
 				'label': d.label,
 				'colors': d.colors,
 				'radius': d.area.map( function(area) {
-					return Math.sqrt( numWedges / Math.PI );
+					return Math.sqrt( area*numWedges / Math.PI );
 				})
 			}
 		})

@@ -97,7 +97,7 @@ d3.csv("topCommSize.csv", function(error, data) {
 
 	var width = 600,
 	    height = 600,
-	    color = d3.interpolateReds,
+	    color = d3.interpolateBlues,
 	    div = d3.select("body").append("div")
 	       .style("position", "relative");
 
@@ -148,7 +148,7 @@ d3.csv("topCommSize.csv", function(error, data) {
 	}  
 }),
 
-d3.csv("piggy.csv", function(error, data){
+d3.csv("piggyCom.csv", function(error, data){
 	var rose = Chart.rose(),
 			height = 1000,
 			color = d3.interpolateReds,
@@ -178,7 +178,7 @@ d3.csv("piggy.csv", function(error, data){
 		.append( 'figure' );
 
 	// Get the figure width:
-	width = parseInt( figure.style( 'width' ), 10 );
+	width = parseInt(figure.style('width'), 10);
 
 	// Update the chart generator settings:
 	rose.legend(labels)
@@ -189,11 +189,17 @@ d3.csv("piggy.csv", function(error, data){
 		.domain( [0, maxRadius] )
 		.angle( function(d) { return d.id; } )
 		//.colors( function(d) { /*console.log(d.colors);*/ return d.colors; } )
-		.area( function(d, i) { return [d.id]; } );
+		.area( function(d, i) { return [d.CommSize/500000000]; } );
 	// Bind the data and generate a new chart:
 	figure.datum( data )
 		.attr('class', 'canvas')
-		.call( rose );
+		.call(rose);
+
+	rose.area = function (_) {
+	    if (!arguments.length) return area;
+	    area = _;
+	    return rose;
+	};
 
 }); 
 </script>
