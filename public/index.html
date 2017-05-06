@@ -119,8 +119,8 @@ d3.csv("piggyCom.csv", function(error, data1){
 		d.label = labels[d.id];
     d.colors = color(0.5+((d.piggyNum)*0.2));
 		scalar = 100*60 / labels.size;
-		//d.piggyNum = d.piggyNum * scalar;
-    //console.log(d.piggyNum);
+		//d.piggyNum = d.piggyNum;
+        //console.log(d.piggyNum);
 	} );
 
 	// Get the maximum value:

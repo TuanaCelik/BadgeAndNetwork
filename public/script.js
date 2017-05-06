@@ -20,10 +20,11 @@ var Chart = {};
 
 Chart.rose = function() {
 
-	var margin = {'top': 10, 'right': 20, 'bottom': 400, 'left': 300},
+    var margin = { 'top': 10, 'right': 20, 'bottom': 400, 'left': 300 },
 		height = 100,
 		width = 100,
-		colors = function(d){ return d.colors;},
+		colors = function (d) { return d.colors; },
+        piggyNum = function (d) { return d.piggyNum; },
 		area = function(d) { return [d.y]; },
 		angle = function(d) { return d.x; },
 		radiusScale = d3.scale.linear(),
@@ -71,6 +72,7 @@ Chart.rose = function() {
 				'angle': angle.call(data, d, i),
 				'area': area.call(data, d, i),
 				'colors': colors.call(data, d, i),
+                'piggyNum': piggyNum.call(data, d, i),
 				'label': label.call(data, d, i)			
 			};
 		});
@@ -82,6 +84,7 @@ Chart.rose = function() {
 				'angle': d.angle,
 				'label': d.label,
 				'colors': d.colors,
+                'piggyNum': d.piggyNum,
 				'radius': d.area.map( function(area) {
 					return Math.sqrt( area*numWedges / Math.PI );
 				})
@@ -146,6 +149,7 @@ Chart.rose = function() {
 			  		return {
 			  			'legend': legend[i],
 			  			'radius': d.radius[i],
+                        'piggyNum': d.piggyNum,
 			  			'angle': d.angle
 			  		};
 			  	});
@@ -154,9 +158,10 @@ Chart.rose = function() {
 		  	.attr('class', function(d) { return 'wedge ' + d.legend; })
 		  	.attr('d', arc );
 
-		// Append title tooltips:
+	    // Append title tooltips:
+		//console.log(d.colors);
 		wedges.append('svg:title')
-			.text( function(d) { return d.legend + ': ' + Math.floor(Math.PI / numWedges); });
+			.text(function (d) { return "ID: " + d.angle + "\nPiggy Num: " + d.piggyNum + "\nTotal Payload: " + Math.round(Math.pow(d.radius, 2) * Math.PI * 500000000 / numWedges); });
 
 		// Transition the wedges to view:
 		wedgeGroups.transition()
@@ -194,6 +199,7 @@ Chart.rose = function() {
 					{
 						'index': i,
 						'colors': d.colors,
+                        'piggyNum': d.piggyNum,
 						'label': d.label
 					}
 				];
@@ -246,6 +252,13 @@ Chart.rose = function() {
 		colors = _;
 		//console.log(colors);
 		return chart;
+	};
+
+	chart.piggyNum = function (_) {
+	    if (!arguments.length) return piggyNum;
+	    piggyNum = _;
+	    //console.log(colors);
+	    return chart;
 	};
 
 	// Set/Get: angle
