@@ -23,7 +23,6 @@ Chart.rose = function() {
 	var margin = {'top': 20, 'right': 20, 'bottom': 400, 'left': 500},
 		height = 100,
 		width = 100,
-		//color = d3.interpolateReds,
 		colors = function(d){ return d.colors;},
 		area = function(d) { return [d.y]; },
 		angle = function(d) { return d.x; },
@@ -33,7 +32,7 @@ Chart.rose = function() {
 		legend = [''],
 		label = function(d) { /*console.log('got here');*/ return d.label; },
 		delay = 1000,
-		duration = 100,
+		duration = 500,
 		canvas, graph, centerX, centerY, numWedges, wedgeGroups, wedges, legendGroup;
 
 	// Arc Generator:

@@ -18,7 +18,7 @@ form {
 
 figure {
 	position: absolute;
-	left: 1000;
+	left: 900;
 	top: 0;
 	float: right;
 	width: 100%;
@@ -63,14 +63,36 @@ figure {
 </style>
   <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
 <body>
-<script src="d3/d3.v3.min.js"></script>
+<!-- <script src="d3/d3.v3.min.js"></script> -->
+<script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script type="text/javascript" src="script.js"></script>
 <script>
 
-d3.csv("piggyCom.csv", function(error, data){
+d3.csv("piggyCom.csv", function(error, data1){
+ d3.csv("topCommSize.csv", function(error, data) {
+
+  /*************************REST OF TREE CODE BELOW***********************/
+  var mapped_children = data.map(function(d)
+  {
+    name = d.destIP;
+    size = d.Size/10;
+    freq = d.Freq/10;
+    s1 = (d.s1).split('.')[3];
+    s2 = (d.s2).split('.')[3];
+    s3 = (d.s3).split('.')[3];
+    s4 = (d.s4).split('.')[3];
+    s5 = (d.s5).split('.')[3];
+    s6 = (d.s6).split('.')[3];
+    s7 = (d.s7).split('.')[3];
+    s8 = (d.s8).split('.')[3];
+    s9 = (d.s9).split('.')[3];
+    s10 = (d.s10).split('.')[3];
+  	//console.log(s1);
+    return {"name":name, "size":size, "freq":freq, "s1":s1, "s2":s2, "s3":s3, "s4":s4, "s5":s5, "s6":s6, "s7":s7, "s8":s8, "s9":s9, "s10":s10};
+  })
 	var rose = Chart.rose(),
 			height = 1000,
 			color = d3.interpolateReds,
@@ -79,16 +101,18 @@ d3.csv("piggyCom.csv", function(error, data){
 		labels.push(i);
 	}
 
+	//console.log(s1);
 	var scalar;
-	data.forEach( function(d) { 
+	data1.forEach( function(d) { 
 		d.label = labels[d.id];
-		d.colors = color(0.5+((d.piggyNum)*0.2));
+    d.colors = color(0.5+((d.piggyNum)*0.2));
 		scalar = 100*60 / labels.size;
-		d.piggyNum = d.piggyNum * scalar;
+		//d.piggyNum = d.piggyNum * scalar;
+    //console.log(d.piggyNum);
 	} );
 
 	// Get the maximum value:
-	var maxVal = d3.max( data, function(d) {
+	var maxVal = d3.max( data1, function(d) {
 		return d3.max( [6, d.piggyNum] );
 	});
 
@@ -110,72 +134,91 @@ d3.csv("piggyCom.csv", function(error, data){
 		.duration( 200 )
 		.domain( [0, maxRadius] )
 		.angle( function(d) { return d.id; } )
-		//.colors( function(d) { /*console.log(d.colors);*/ return d.colors; } )
 		.area( function(d, i) { return [d.CommSize/500000000]; } );
 	// Bind the data and generate a new chart:
-	figure.datum( data )
+	figure.datum( data1 )
 		.attr('class', 'canvas')
 		.call(rose);
 
-	rose.area = function (_) {
-	    if (!arguments.length) return area;
-	    area = _;
-	    return rose;
-	};
-
-}),
-
-d3.csv("topCommSize.csv", function(error, data) {
-  var mapped_children = data.map(function(d)
-  {
-    name = d.destIP;
-    size = d.Size/10;
-    freq = d.Freq/10;
-    s1 = d.s1;
-    s2 = d.s2;
-    s3 = d.s3;
-    s4 = d.s4;
-    s5 = d.s5;
-    s6 = d.s6;
-    s7 = d.s7;
-    s8 = d.s8;
-    s9 = d.s9;
-    s10 = d.s10;
-    return {"name":name, "size":size, "freq":freq, "s1":s1, "s2":s2, "s3":s3, "s4":s4, "s5":s5, "s6":s6, "s7":s7, "s8":s8, "s9":s9, "s10":s10};
-  })
-
+	/********************************CODE FOR THE TREE****************************************************/
+ 
   var tree = {
       name: "tree",
       children: mapped_children
   };
 
-  var width = 600,
-      height = 600,
-      color = d3.interpolateReds,
+  var width1 = 600,
+      height1 = 600,
+      color1 = d3.interpolateBlues,
       div = d3.select("body").append("div")
          .style("position", "relative");
 
   var treemap = d3.layout.treemap()
-      .size([width, height])
+      .size([width1, height1])
       .sticky(true)
       .value(function(d) { return d.size; });
 
 
   var tool = d3.select("body").append("div").attr("class", "toolTip");
-
+  
   var mousemove = function(d) {
+   
+    //console.log("here");
     var xPosition = d3.event.pageX + 5;
     var yPosition = d3.event.pageY + 5;
     
-    tool.style("left", xPosition + "px")
-    tool.style("top", yPosition + "px")
-    tool.html("IP: " + d["name"] + "<br>" + "Incoming data: " + d["size"] + "<br>" + "Frequency: " + d["freq"]);
+    tool.style("left", xPosition + "px");
+    tool.style("top", yPosition + "px");
+    tool.html("IP: " + d["name"] + "<br>" + "Incoming data: " + d["size"] + "<br>" + "Frequency: " + d["freq"]
+      + "<br>" + "Contactor 1: " + d["s1"] + "<br>" + "Contactor 2: " + d["s2"]+ "<br>" + "Contactor 3: " + d["s3"]+ "<br>" + "Contactor 4: " + d["s4"]+ "<br>" + "Contactor 5: " + d["s5"] );
     tool.style("display", "inline-block");
+    
+    s1 = parseInt(d["s1"]); s2 = parseInt(d["s2"]); s3 = parseInt(d["s3"]); s4 = parseInt(d["s4"]); s5 = parseInt(d["s5"]);
+    s6 = parseInt(d["s6"]); s7 = parseInt(d["s7"]); s8 = parseInt(d["s8"]); s9 = parseInt(d["s9"]); s10 = parseInt(d["s10"]);
+      var i = 0.1;
+      data1.forEach( function(d) { 
+        d.label = labels[d.id];
+        if(d.id == s1 || d.id == s2 || d.id == s3 || d.id == s4 || d.id == s5 || d.id == s6 || d.id == s7 || d.id == s8 || d.id == s9 || d.id == s10){
+          if(d.id == s1) i = i*10;
+          else if(d.id == s2) i = i*9;
+          else if(d.id == s3) i = i*8;
+          else if(d.id == s4) i = i*7;
+          else if(d.id == s5) i = i*6;
+          else if(d.id == s6) i = i*5;
+          else if(d.id == s7) i = i*4;
+          else if(d.id == s8) i = i*3;
+          else if(d.id == s9) i = i*2;
+          else if(d.id == s10) i = i;
+          d.colors = color1(i);
+          i = 0.1;
+        }
+        else d.colors = color(0.5+((d.piggyNum)*0.2));
+
+    } );
+        d3.select("figure").remove();
+        makeRose();
+
+  };
+
+  var makeRose = function(){
+    figure = d3.select("body").append("figure");
+    figure.datum( data1 )
+          .attr('class', 'canvas')
+          .call(rose);
   };
 
   var mouseout = function() {
-    down = false
+    
+    d3.select("figure").remove();
+    data1.forEach( function(d) { 
+        d.colors = color(0.5+((d.piggyNum)*0.2));
+
+    } );
+    makeRose();
+    down = false;
     tool.style("display", "none");
+    //console.log("here 1");
+    //console.log("yooo");
   };
    
   var node = div.datum(tree).selectAll(".node")
@@ -184,10 +227,9 @@ d3.csv("topCommSize.csv", function(error, data) {
         .attr("class", "node")
         .call(position)
         .style("background-color", function(d) {
-            //console.log(1-((1/d.freq)*50));
             return d.name == 'tree' ? '#fff' : color(1-((1/d.freq)*50)); })
-        .on("mouseout", mouseout)
         .on("mousemove", mousemove)
+        .on("mouseout", mouseout)
         .append('div')
         .style("font-size", function(d) {
             // compute font size based on sqrt(area)
@@ -200,6 +242,7 @@ d3.csv("topCommSize.csv", function(error, data) {
         .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
         .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
   }  
+ });
 });
 </script>
 </body>
