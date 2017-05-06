@@ -18,18 +18,22 @@ form {
 
 figure {
 	position: absolute;
-	left: 50px;
-	top: 50px;
+	left: 0px;
+	top: 0px;
 	float: right;
 	width: 100%;
 }
 
 h2 {
   position: absolute;
-  left: 700px;
-  top: 5px;
+  left: 650px;
+  top: 15px;
+  font-size: 200%;
 }
 .canvas {
+  position: absolute;
+  left:300px;
+  top: 50px;
 	font-family: 'Cabin', sans-serif;
  	font-size: 14px;
  	/*fill: #f48641;*/
@@ -100,7 +104,8 @@ d3.csv("piggyCom.csv", function(error, data1){
   	//console.log(s1);
     return {"name":name, "size":size, "freq":freq, "s1":s1, "s2":s2, "s3":s3, "s4":s4, "s5":s5, "s6":s6, "s7":s7, "s8":s8, "s9":s9, "s10":s10};
   })
-	var rose = Chart.rose(),
+	
+  var rose = Chart.rose(),
 			height = 1000,
 			color = d3.interpolateReds,
 			labels = [];

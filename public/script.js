@@ -20,7 +20,7 @@ var Chart = {};
 
 Chart.rose = function() {
 
-	var margin = {'top': 20, 'right': 20, 'bottom': 400, 'left': 500},
+	var margin = {'top': 10, 'right': 20, 'bottom': 400, 'left': 300},
 		height = 100,
 		width = 100,
 		colors = function(d){ return d.colors;},
@@ -118,7 +118,7 @@ Chart.rose = function() {
 		// Create the graph element:
 		graph = canvas.append('svg:g')
 			.attr('class', 'graph')
-			.attr('transform', 'translate(' + (centerX + margin.left) + ',' + (centerY + margin.top) + ')');
+			.attr('transform', 'translate(' + (margin.left) + ',' + (centerY + margin.top) + ')');
 
 	}; // end FUNCTION createBase()
 
