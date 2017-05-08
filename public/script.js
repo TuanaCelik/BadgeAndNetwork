@@ -161,7 +161,7 @@ Chart.rose = function() {
 	    // Append title tooltips:
 		//console.log(d.colors);
 		wedges.append('svg:title')
-			.text(function (d) { return "ID: " + d.angle + "\nPiggy Num: " + d.piggyNum + "\nTotal Payload: " + Math.round(Math.pow(d.radius, 2) * Math.PI * 500000000 / numWedges); });
+			.text(function (d) { return "ID: " + d.angle + "\nViolations: " + d.piggyNum + "\nData Transfer: " + Math.round(Math.pow(d.radius, 2) * Math.PI * 500000000 / numWedges); });
 
 		// Transition the wedges to view:
 		wedgeGroups.transition()
@@ -169,7 +169,7 @@ Chart.rose = function() {
 			.duration( function(d,i) { 
 				return duration*i;
 			})
-			.attr('transform', 'scale(1,1)');
+			.attr('transform', 'scale(1, 1)');
 
 		// Append labels to the wedgeGroups:
 		var numLabels = d3.selectAll('.label-path')[0].length;
