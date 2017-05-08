@@ -31,7 +31,7 @@ Chart.rose = function() {
 		angleScale = d3.scale.linear().range( [Math.PI, 3*Math.PI ] ),
 		domain = [0, 1],
 		legend = [''],
-		label = function(d) { /*console.log('got here');*/ return d.label; },
+		label = function(d) { return d.label; },
 		delay = 1000,
 		duration = 500,
 		canvas, graph, centerX, centerY, numWedges, wedgeGroups, wedges, legendGroup;

@@ -119,8 +119,7 @@ d3.csv("piggyCom.csv", function(error, data1){
 		d.label = labels[d.id];
     d.colors = color(0.5+((d.piggyNum)*0.2));
 		scalar = 100*60 / labels.size;
-		//d.piggyNum = d.piggyNum;
-        //console.log(d.piggyNum);
+		
 	} );
 
 	// Get the maximum value:
@@ -144,7 +143,7 @@ d3.csv("piggyCom.csv", function(error, data1){
 		.height( height )
 		.delay( 0 )
 		.duration( 200 )
-		.domain( [0, maxRadius] )
+    .domain( [0, maxRadius] )
 		.angle( function(d) { return d.id; } )
 		.area( function(d, i) { return [d.CommSize/500000000]; } );
 	// Bind the data and generate a new chart:
